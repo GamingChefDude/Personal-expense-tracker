@@ -79,8 +79,9 @@ def generate_report():
                         categories[row[1]] += float(row[2])
                 except (ValueError, IndexError):
                     pass
-
-        plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%')
+        
+        plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%', startangle=90)
+        plt.legend(title="Expenses", loc = "best")
         plt.title("Expenses by category")
         plt.show()
     except FileNotFoundError:
