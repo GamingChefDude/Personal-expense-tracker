@@ -140,7 +140,6 @@ def total_expenses():
         print(f"Total: ${total}\n")
     Main = input("write main to go back: ")
     
-
 def exit():
     print("Goodbye!")
 
