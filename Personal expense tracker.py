@@ -3,7 +3,7 @@ import os
 import datetime
 import matplotlib.pyplot as plt
 
-global Main
+global amount
 
 def database_cvs():
     if not os.path.isfile("expenses.csv"):
@@ -12,8 +12,9 @@ def database_cvs():
             writer.writerow(["Date", "Category", "Amount"])
 
 def add_expense():
-    global Main
-    print("What expense would you like to add?")
+    global amount
+    
+    print("\nWhat expense would you like to add?")
     print("\n1. Food\n2. Transpotation\n3. Entertainment\n4. Bill\n5. Housing\n6. Other\n7. Back: ")
     expenses_input = input("Enter the number of the expense: ")
     if expenses_input == "1":
@@ -30,25 +31,42 @@ def add_expense():
         expenses = "Other"
     elif expenses_input == "7":
         main()
+    else:
+        print("error, invalid category")
+        add_expense()
+        print()
 
     datex = datetime.datetime.now() 
     print(datex.strftime("Date: %d-%m-%Y"))
     date = datex.strftime("%d-%m-%Y")
-    
-    amount = float(input("Enter the amount of the expense (100000 = Back): ")) 
-    if amount == 100000:
-        main() 
-    
-    print("Expense added successfully!")
+
+    def valid_amount():
+        global amount
+        try:
+            amount = float(input("Enter the amount of the expense: "))
+            if amount < 0:
+                print("Number cant be negetive")
+                return amount
+        except ValueError as e:
+            print(f"Invalid input: {e}, please try again")
+            valid_amount()            
+
+    valid_amount()
 
     with open("expenses.csv", mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([date, expenses, amount])  
+        writer.writerow([date, expenses, amount]) 
+    
+    print("Expense added successfully!") 
     print("")
-    Main = input("write main to go back: ")     
 
+    main = str(input("Want to go back to main (y/n): "))     
+    if main == "y":
+        main()
+    else:
+        exit()
+    
 def view_expenses():
-    global Main
     try:
         with open("expenses.csv", mode='r') as file:
             reader = csv.reader(file)
@@ -63,7 +81,12 @@ def view_expenses():
     except FileNotFoundError:
         print("Storage file does not exist\n")
     print("")
-    Main = input("write main to go back: ")
+    
+    Main = str(input("Want to go back to main (y/n): "))     
+    if Main == "y":
+        main()
+    else:
+        exit()
 
 def generate_report():
     try:
@@ -88,7 +111,7 @@ def generate_report():
         print("No expenses found. Add some first!\n")
 
 def total_expenses():
-    global Main
+    
     with open("expenses.csv", mode='r') as file:
         reader = csv.reader(file)
         next(reader) 
@@ -138,7 +161,12 @@ def total_expenses():
         print("No expenses found. Add some first!\n")
     else:
         print(f"Total: ${total}\n")
-    Main = input("write main to go back: ")
+    
+    main = str(input("Want to go back to main (y/n): "))     
+    if main == "y":
+        main()
+    else:
+        exit()
     
 def exit():
     print("Goodbye!")
@@ -152,19 +180,13 @@ def main():
 
     if categories == "1":
         add_expense()
-        if Main == "main":
-            main()
     elif categories == "2":
         view_expenses()
-        if Main == "main":
-            main()
     elif categories == "3":
         generate_report()
         main()
     elif categories == "4":
         total_expenses()
-        if Main == "main":
-            main()
     elif categories == "5":
         exit()
     else:
