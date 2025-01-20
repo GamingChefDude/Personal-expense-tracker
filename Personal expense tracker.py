@@ -32,7 +32,8 @@ def add_expense():
         add_expense()
     category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other", "Back"]
     category = (category_list[category_input - 1])
-    print(category)
+    print(f"You selected {category}")
+    time.sleep(.5)
     
     #setting the date
     datex = datetime.datetime.now() 
@@ -219,6 +220,7 @@ def return_main():
         exit()
     else:
         print("invalid input")
+        return_main()
 
 database_cvs()
 main()
