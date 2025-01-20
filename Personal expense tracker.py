@@ -2,13 +2,15 @@ import csv
 import os
 import datetime
 import matplotlib.pyplot as plt
+import time
 
 global amount, expenses_file
 
 def database_cvs():
     global expenses_file
-    expenses_file = "expenses.csv"
+    expenses_file = "expenses.csv" #setting the storage file name
 
+    #makes the storage file
     if not os.path.isfile(expenses_file):
         with open(expenses_file, mode='w') as file:
             writer = csv.writer(file)
@@ -19,30 +21,25 @@ def add_expense():
 
     print("\nWhat expense would you like to add?")
     print("\n1. Food\n2. Transportation\n3. Entertainment\n4. Bill\n5. Housing\n6. Other\n7. Back: ")
-    expenses_input = input("Enter the number of the expense: ")
-    if expenses_input == "1":
-        expenses = "Food"
-    elif expenses_input == "2":
-        expenses = "Transportation"
-    elif expenses_input == "3":
-        expenses = "Entertainment"
-    elif expenses_input == "4":
-        expenses = "Bill"
-    elif expenses_input == "5":
-        expenses = "Housing"
-    elif expenses_input == "6":
-        expenses = "Other"
-    elif expenses_input == "7":
-        main()
-    else:
-        print("error, invalid category")
+    
+    #setting the category
+    try:
+        category_input = int(input("Enter the number of the expense: "))
+    except ValueError:
+        pass
+        print("invalid input")
+        time.sleep(1.5)
         add_expense()
-        print()
-
+    category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other", "Back"]
+    category = (category_list[category_input - 1])
+    print(category)
+    
+    #setting the date
     datex = datetime.datetime.now() 
     print(datex.strftime("Date: %d-%m-%Y"))
     date = datex.strftime("%d-%m-%Y")
 
+    #getting valid input for money
     def valid_amount():
         global amount
         try:
@@ -51,14 +48,15 @@ def add_expense():
                 print("Number cant be negetive")
                 return amount
         except ValueError as e:
-            print(f"Invalid input: {e}, please try again")
+            print(f"\n\nInvalid input: {e}, please try again")
             valid_amount()            
 
     valid_amount()
 
+    #getting everything in the storage file
     with open(expenses_file, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([date, expenses, amount]) 
+        writer.writerow([date, category, amount]) 
     
     print("Expense added successfully!") 
     print("")
@@ -70,11 +68,11 @@ def view_expenses():
         with open(expenses_file, mode='r') as file:
             reader = csv.reader(file)
             next(reader) 
-            print(f"{'Date':<15}{'Category':<15}{'Amount':<10}")
-            print("-" * 58)
+            print(f"{'Date':<15}{'Category':<15}{'Amount':<10}") #printing the header
+            print("-" * 58) #printing the line between header and expenses
             for row in reader:
                 try:
-                    print(f"{row[0]:<15}{row[1]:<15}${row[2]:<10}")
+                    print(f"{row[0]:<15}{row[1]:<15}${row[2]:<10}") # printing date, category and amount
                 except (ValueError, IndexError):
                     pass
     except FileNotFoundError:
@@ -107,18 +105,18 @@ def generate_report():
 
 def monthly_expenses():
     try:
-        month = input("What month do you want to see (mm-yyyy)?: ")
+        month = input("What month do you want to see (mm-yyyy)?: ") 
 
         with open(expenses_file, mode="r") as file:
             reader = csv.reader(file)
             next(reader)
-            filtered = [row for row in reader if row[0].split('-')[1:] == month.split('-')]
+            filtered = [row for row in reader if row[0].split('-')[1:] == month.split('-')] #finding the rigth month
             if filtered:
                 print(f"\nExpenses for {month}:")
-                print(f"{'Date':<15}{'Category':<15}{'Amount':<10}")
+                print(f"{'Date':<15}{'Category':<15}{'Amount':<10}") #printing the header
                 print("-" * 40)
                 for row in filtered:
-                    print(f"{row[0]:<15}{row[1]:<15}${row[2]:<10}")
+                    print(f"{row[0]:<15}{row[1]:<15}${row[2]:<10}") #printing the expenses
             else:
                 print(f"No expense for {month}")
     except FileExistsError:
@@ -131,6 +129,7 @@ def total_expenses():
     with open(expenses_file, mode='r') as file:
         reader = csv.reader(file)
         next(reader) 
+        #setting all the amounts to zero
         food = 0
         transportation = 0
         entertainment = 0
@@ -138,8 +137,10 @@ def total_expenses():
         housing = 0
         other = 0
         total = 0
+
         for row in reader:
             try:
+                #adds the amount on the rows with the same category and rounds the number to (xx.xx)
                 if row[1] == "Food":
                     food += float(row[2])
                     food = round(food, 2)
@@ -165,6 +166,7 @@ def total_expenses():
         print("\n---Total expenses---")
         print("-" * 20)
 
+    #prints the category with the amount
     print(f"Food: ${food}")
     print(f"Transportation: ${transportation}")  
     print(f"Entertainment: ${entertainment}")
@@ -173,6 +175,7 @@ def total_expenses():
     print(f"Other: ${other}")  
     print("-" * 20)
 
+    #print the total
     if total == 0:
         print("No expenses found. Add some first!\n")
     else:
@@ -188,23 +191,24 @@ def main():
     print("\n\n---Personal Expense Tracker---")
     print("-" * 30,)
     print("\n 1. Add expense\n 2. View expenses\n 3. Generate report\n 4. Monthly Expenses\n 5. Total\n 6. Exit\n")
-    categories = input("input here: ")
-
-    if categories == "1":
+    categories_input = (input("input here: "))
+    
+    if categories_input == "1":
         add_expense()
-    elif categories == "2":
+    elif categories_input == "2":
         view_expenses()
-    elif categories == "3":
+    elif categories_input == "3":
         generate_report()
         main()
-    elif categories == "4":
+    elif categories_input == "4":
         monthly_expenses()
-    elif categories == "5":
+    elif categories_input == "5":
         total_expenses()
-    elif categories == "6":
+    elif categories_input == "6":
         exit()
     else:
-        print("Invalid choice. Please try again.\n")
+        print("\n\n\nInvalid choice. Please try again.\n")
+        time.sleep(2)
         main()
 
 def return_main():
