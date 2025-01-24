@@ -25,15 +25,20 @@ def add_expense():
     #setting the category
     try:
         category_input = int(input("Enter the number of the expense: "))
-    except ValueError:
+        category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other", "Back"]
+        category = (category_list[category_input - 1])
+    except (ValueError, IndexError): #removing errors
         pass
         print("invalid input")
         time.sleep(1.5)
         add_expense()
-    category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other", "Back"]
-    category = (category_list[category_input - 1])
+
     print(f"You selected {category}")
-    time.sleep(.5)
+
+    if category == "Back":
+        return_main()
+
+    time.sleep(1)
     
     #setting the date
     datex = datetime.datetime.now() 
@@ -214,6 +219,7 @@ def main():
 
 def return_main():
     choise = str(input("Want to go back to main (y/n): "))  
+
     if choise == "y":
         main()
     elif choise == "n":
