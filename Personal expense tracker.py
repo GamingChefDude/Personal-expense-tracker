@@ -16,6 +16,22 @@ def database_cvs():
             writer = csv.writer(file)
             writer.writerow(["Date", "Category", "Amount"])      
 
+def password():
+    print("\n\n---Personal Expense Tracker---")
+    print("-" * 30,)
+    print("This Program is password protected")
+    real_password = "hellow"
+    password_input = input("Write the correct password: ")
+    if real_password == password_input:
+        print("Correct password! \nWelcome in")
+        time.sleep(1)
+        main()
+
+    else:
+        print("Wrong password \nTry Again")
+        password()
+
+
 def add_expense():
     global amount, expenses_file
 
@@ -30,7 +46,7 @@ def add_expense():
     except (ValueError, IndexError): #removing errors
         pass
         print("invalid input")
-        time.sleep(1.5)
+        time.sleep(1)
         add_expense()
 
     print(f"You selected {category}")
@@ -229,4 +245,4 @@ def return_main():
         return_main()
 
 database_cvs()
-main()
+password()
