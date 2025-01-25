@@ -10,7 +10,7 @@ def database_cvs():
     global expenses_file
     expenses_file = "expenses.csv" #setting the storage file name
 
-    #makes the storage file
+    #makes the storage file if it dont exicst already
     if not os.path.isfile(expenses_file):
         with open(expenses_file, mode='w') as file:
             writer = csv.writer(file)
@@ -30,7 +30,6 @@ def password():
     else:
         print("Wrong password \nTry Again")
         password()
-
 
 def add_expense():
     global amount, expenses_file
@@ -104,26 +103,35 @@ def view_expenses():
     return_main()
 
 def generate_report():
-    try:
-        with open(expenses_file, mode='r') as file:
-            reader = csv.reader(file)
-            next(reader) 
-            categories = {}
-            for row in reader:
-                try:
-                    if row[1] not in categories:
-                        categories[row[1]] = float(row[2])
-                    else:
-                        categories[row[1]] += float(row[2])
-                except (ValueError, IndexError):
-                    pass
-        
-        plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%', startangle=90)
-        plt.legend(title="Expenses", loc = "best")
-        plt.title("Expenses by category")
-        plt.show()
-    except FileNotFoundError:
-        print("No expenses found. Add some first!\n")
+    print("\nWhat type of graph?")
+    print("1. pie chart \n2. line graph")
+    graph = int(input("Input here: "))
+    if graph == 1:
+        try:
+            with open(expenses_file, mode='r') as file:
+                reader = csv.reader(file)
+                next(reader) 
+                categories = {}
+                for row in reader:
+                    try:
+                        if row[1] not in categories:
+                            categories[row[1]] = float(row[2])
+                        else:
+                            categories[row[1]] += float(row[2])
+                    except (ValueError, IndexError):
+                        pass
+            
+            plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%', startangle=90)
+            plt.legend(title="Expenses", loc = "best")
+            plt.title("Expenses by category")
+            plt.show()
+        except FileNotFoundError:
+            print("No expenses found. Add some first!\n")
+    elif graph == 2:
+        print("Feature not added, come back later")
+        time.sleep(1)
+    else:
+        print("Invalid input")
 
 def monthly_expenses():
     try:
@@ -204,15 +212,19 @@ def total_expenses():
         print(f"Total: ${total}\n")
     
     return_main()
-    
+
+def set_budget():
+    print("This feature is not available yet \nCome back later")
+
 def exit():
     print("Goodbye!")
+    password()
 
 def main():
     
     print("\n\n---Personal Expense Tracker---")
     print("-" * 30,)
-    print("\n 1. Add expense\n 2. View expenses\n 3. Generate report\n 4. Monthly Expenses\n 5. Total\n 6. Exit\n")
+    print("\n1. Add expense\n2. View expenses\n3.Generate report\n4.Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
     categories_input = (input("input here: "))
     
     if categories_input == "1":
@@ -227,6 +239,8 @@ def main():
     elif categories_input == "5":
         total_expenses()
     elif categories_input == "6":
+        set_budget()
+    elif categories_input == "7":
         exit()
     else:
         print("\n\n\nInvalid choice. Please try again.\n")
