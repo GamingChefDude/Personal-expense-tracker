@@ -213,9 +213,51 @@ def total_expenses():
     
     return_main()
 
-def set_budget():
-    print("This feature is not available yet \nCome back later")
+def fun_budget():
+    def set_budget():
+        try:
+            budget_limit = float(input("Set your monthly budget limit: $"))
+            with open("budget.txt", mode='w') as file:
+                file.write(str(budget_limit))
+            print("Budget set successfully!")
+        except ValueError:
+            print("Invalid input. Please enter a numeric value.")
+        return_main()
 
+    def check_budget():
+        try:
+            with open("budget.txt", mode='r') as file:
+                budget_limit = float(file.read())
+
+            current_month = datetime.datetime.now().strftime("%m-%Y")
+            with open(expenses_file, mode='r') as file:
+                reader = csv.reader(file)
+                next(reader)
+                total_expenses = sum(float(row[2]) for row in reader if row[0].split('-')[1:] == current_month.split('-'))
+
+            if total_expenses > budget_limit:
+                print(f"Warning: You have exceeded your budget of ${budget_limit:.2f}. Current expenses: ${total_expenses:.2f}.")
+            else:
+                print(f"You are within your budget. Current expenses: ${total_expenses:.2f}, Budget: ${budget_limit:.2f}.")
+        except FileNotFoundError:
+            print("No budget has been set. Please set a budget first.")
+        except ValueError:
+            print("Error in reading budget. Set it again.")
+        return_main()
+    
+    print("\n1. Set budget \n2. See budget")
+    select = input("What do you want to do?: ")
+    if select == "1":
+        print("You chose set budget")
+        time.sleep(1)
+        set_budget()
+    elif select == "2":
+        print("You chose see budget")
+        time.sleep(1)
+        check_budget()
+    else:
+        print("Invalid choise")
+                 
 def exit():
     print("Goodbye!")
     password()
@@ -224,7 +266,7 @@ def main():
     
     print("\n\n---Personal Expense Tracker---")
     print("-" * 30,)
-    print("\n1. Add expense\n2. View expenses\n3.Generate report\n4.Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
+    print("\n1. Add expense\n2. View expenses\n3. Generate report\n4. Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
     categories_input = (input("input here: "))
     
     if categories_input == "1":
@@ -239,7 +281,7 @@ def main():
     elif categories_input == "5":
         total_expenses()
     elif categories_input == "6":
-        set_budget()
+        fun_budget()
     elif categories_input == "7":
         exit()
     else:
