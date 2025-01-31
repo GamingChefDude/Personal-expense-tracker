@@ -31,6 +31,27 @@ def password():
         print("Wrong password \nTry Again")
         password()
 
+def check_budget():
+        try:
+            with open("budget.txt", mode='r') as file:
+                budget_limit = float(file.read())
+
+            current_month = datetime.datetime.now().strftime("%m-%Y")
+            with open(expenses_file, mode='r') as file:
+                reader = csv.reader(file)
+                next(reader)
+                total_expenses = sum(float(row[2]) for row in reader if row[0].split('-')[1:] == current_month.split('-'))
+
+            if total_expenses > budget_limit:
+                print(f"Warning: You have exceeded your budget of ${budget_limit:.2f}. Current expenses: ${total_expenses:.2f}.")
+            else:
+                print(f"You are within your budget. Current expenses: ${total_expenses:.2f}, Budget: ${budget_limit:.2f}.")
+        except FileNotFoundError:
+            print("No budget has been set. Please set a budget first.")
+        except ValueError:
+            print("Error in reading budget. Set it again.")
+        return_main()
+
 def add_expense():
     global amount, expenses_file
 
@@ -81,6 +102,7 @@ def add_expense():
     
     print("Expense added successfully!") 
     print("")
+    check_budget()
 
     return_main()
 
@@ -213,7 +235,7 @@ def total_expenses():
     
     return_main()
 
-def fun_budget():
+def fun_budget():   
     def set_budget():
         try:
             budget_limit = float(input("Set your monthly budget limit: $"))
@@ -222,29 +244,8 @@ def fun_budget():
             print("Budget set successfully!")
         except ValueError:
             print("Invalid input. Please enter a numeric value.")
+            set_budget()
         return_main()
-
-    def check_budget():
-        try:
-            with open("budget.txt", mode='r') as file:
-                budget_limit = float(file.read())
-
-            current_month = datetime.datetime.now().strftime("%m-%Y")
-            with open(expenses_file, mode='r') as file:
-                reader = csv.reader(file)
-                next(reader)
-                total_expenses = sum(float(row[2]) for row in reader if row[0].split('-')[1:] == current_month.split('-'))
-
-            if total_expenses > budget_limit:
-                print(f"Warning: You have exceeded your budget of ${budget_limit:.2f}. Current expenses: ${total_expenses:.2f}.")
-            else:
-                print(f"You are within your budget. Current expenses: ${total_expenses:.2f}, Budget: ${budget_limit:.2f}.")
-        except FileNotFoundError:
-            print("No budget has been set. Please set a budget first.")
-        except ValueError:
-            print("Error in reading budget. Set it again.")
-        return_main()
-    
     print("\n1. Set budget \n2. See budget")
     select = input("What do you want to do?: ")
     if select == "1":
