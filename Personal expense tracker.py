@@ -4,9 +4,7 @@ import datetime
 import matplotlib.pyplot as plt
 import time
 
-global amount, expenses_file
-
-def database_cvs():
+def database_csv():
     global expenses_file
     expenses_file = "expenses.csv" #setting the storage file name
 
@@ -53,8 +51,6 @@ def check_budget():
         return_main()
 
 def add_expense():
-    global amount, expenses_file
-
     print("\nWhat expense would you like to add?")
     print("\n1. Food\n2. Transportation\n3. Entertainment\n4. Bill\n5. Housing\n6. Other\n7. Back: ")
     
@@ -177,7 +173,6 @@ def monthly_expenses():
     return_main()
 
 def total_expenses():
-    
     with open(expenses_file, mode='r') as file:
         reader = csv.reader(file)
         next(reader) 
@@ -258,13 +253,8 @@ def fun_budget():
         check_budget()
     else:
         print("Invalid choise")
-                 
-def exit():
-    print("Goodbye!")
-    password()
 
 def main():
-    
     print("\n\n---Personal Expense Tracker---")
     print("-" * 30,)
     print("\n1. Add expense\n2. View expenses\n3. Generate report\n4. Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
@@ -284,7 +274,7 @@ def main():
     elif categories_input == "6":
         fun_budget()
     elif categories_input == "7":
-        exit()
+        SystemExit
     else:
         print("\n\n\nInvalid choice. Please try again.\n")
         time.sleep(2)
@@ -301,5 +291,5 @@ def return_main():
         print("invalid input")
         return_main()
 
-database_cvs()
+database_csv()
 password()
