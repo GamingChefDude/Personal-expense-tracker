@@ -177,56 +177,41 @@ def total_expenses():
         reader = csv.reader(file)
         next(reader) 
         #setting all the amounts to zero
-        food = 0
-        transportation = 0
-        entertainment = 0
-        bill = 0
-        housing = 0
-        other = 0
-        total = 0
-
+        category = {"food": 0, "transportation": 0, "entertainment": 0, "bill": 0, "housing": 0, "other": 0, "total": 0}
+        
         for row in reader:
             try:
+                expense = float(row[2])
                 #adds the amount on the rows with the same category and rounds the number to (xx.xx)
                 if row[1] == "Food":
-                    food += float(row[2])
-                    food = round(food, 2)
-                elif row[1] == "Transportation":
-                    transportation += float(row[2])
-                    transportation = round(transportation, 2)
+                    category["food"] += expense
+                elif row[1] == "Transpotation":
+                    category["transportation"] += expense
                 elif row[1] == "Entertainment":
-                    entertainment += float(row[2])
-                    entertainment = round(entertainment, 2)
+                    category["entertainment"] += expense
                 elif row[1] == "Bill":
-                    bill += float(row[2])
-                    bill = round(bill, 2)
+                    category["bill"] += expense
                 elif row[1] == "Housing":
-                    housing += float(row[2])
-                    housing = round(housing, 2)
+                    category["housing"] += expense
                 elif row[1] == "Other":
-                    other += float(row[2])
-                    other = round(other, 2)
-                total += float(row[2])
-                total = round(total, 2)
+                    category["other"] += expense
+                category["total"] += expense
             except (ValueError, IndexError):
                 pass
         print("\n---Total expenses---")
         print("-" * 20)
 
     #prints the category with the amount
-    print(f"Food: ${food}")
-    print(f"Transportation: ${transportation}")  
-    print(f"Entertainment: ${entertainment}")
-    print(f"Bill: ${bill}")
-    print(f"Housing: ${housing}")
-    print(f"Other: ${other}")  
+    print(f"Food: ${category["food"]}")
+    print(f"Transportation: ${category["transportation"]}")  
+    print(f"Entertainment: ${category["entertainment"]}")
+    print(f"Bill: ${category["bill"]}")
+    print(f"Housing: ${category["housing"]}")
+    print(f"Other: ${category["other"]}")  
     print("-" * 20)
 
     #print the total
-    if total == 0:
-        print("No expenses found. Add some first!\n")
-    else:
-        print(f"Total: ${total}\n")
+    print(f"Total: ${category["total"]}\n")
     
     return_main()
 
