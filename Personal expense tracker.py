@@ -178,7 +178,7 @@ def total_expenses():
         next(reader) 
         #setting all the amounts to zero
         category = {"food": 0, "transportation": 0, "entertainment": 0, "bill": 0, "housing": 0, "other": 0, "total": 0}
-        
+
         for row in reader:
             try:
                 expense = float(row[2])
@@ -202,16 +202,16 @@ def total_expenses():
         print("-" * 20)
 
     #prints the category with the amount
-    print(f"Food: ${category["food"]}")
-    print(f"Transportation: ${category["transportation"]}")  
-    print(f"Entertainment: ${category["entertainment"]}")
-    print(f"Bill: ${category["bill"]}")
-    print(f"Housing: ${category["housing"]}")
-    print(f"Other: ${category["other"]}")  
+    print(f"Food: ${round(category["food"], 2)}")
+    print(f"Transportation: ${round(category["transportation"], 2)}")  
+    print(f"Entertainment: ${round(category["entertainment"], 2)}")
+    print(f"Bill: ${round(category["bill"], 2)}")
+    print(f"Housing: ${round(category["housing"], 2)}")
+    print(f"Other: ${round(category["other"], 2)}")  
     print("-" * 20)
 
     #print the total
-    print(f"Total: ${category["total"]}\n")
+    print(f"Total: ${round(category["total"], 2)}\n")
     
     return_main()
 
