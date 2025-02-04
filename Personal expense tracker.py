@@ -61,8 +61,7 @@ def valid_amount():
             else:
                 return amount
         except ValueError as e:
-            print(f"\n\nInvalid input: {e}, please try again")
-            valid_amount()   
+            print(f"\n\nInvalid input: {e}, please try again")   
 
 def add_expense():
     print("\nWhat expense would you like to add?")
@@ -231,41 +230,41 @@ def fun_budget():
         print("Invalid choise")
 
 def main():
-    print("\n\n---Personal Expense Tracker---")
-    print("-" * 30,)
-    print("\n1. Add expense\n2. View expenses\n3. Generate report\n4. Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
-    categories_input = (input("input here: "))
-    
-    if categories_input == "1":
-        add_expense()
-    elif categories_input == "2":
-        view_expenses()
-    elif categories_input == "3":
-        generate_report()
-        main()
-    elif categories_input == "4":
-        monthly_expenses()
-    elif categories_input == "5":
-        total_expenses()
-    elif categories_input == "6":
-        fun_budget()
-    elif categories_input == "7":
-        sys.exit()
-    else:
-        print("\n\n\nInvalid choice. Please try again.\n")
-        time.sleep(2)
-        main()
+    while True:
+        print("\n\n---Personal Expense Tracker---")
+        print("-" * 30,)
+        print("\n1. Add expense\n2. View expenses\n3. Generate report\n4. Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
+        categories_input = (input("input here: "))
+        
+        if categories_input == "1":
+            add_expense()
+        elif categories_input == "2":
+            view_expenses()
+        elif categories_input == "3":
+            generate_report()
+            main()
+        elif categories_input == "4":
+            monthly_expenses()
+        elif categories_input == "5":
+            total_expenses()
+        elif categories_input == "6":
+            fun_budget()
+        elif categories_input == "7":
+            print("Goodbye")
+            break
+        else:
+            print("\n\n\nInvalid choice. Please try again.\n")
+            time.sleep(2)
 
 def return_main():
     choise = str(input("Want to go back to main (y/n): "))  
-
-    if choise == "y":
-        main()
-    elif choise == "n":
-        exit()
-    else:
-        print("invalid input")
-        return_main()
+    while True:
+        if choise == "y":
+            main()
+        elif choise == "n":
+            exit()
+        else:
+            print("invalid input")
 
 database_csv()
 password()
