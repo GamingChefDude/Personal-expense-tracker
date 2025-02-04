@@ -3,6 +3,7 @@ import os
 import datetime
 import matplotlib.pyplot as plt
 import time
+import sys
 
 def database_csv():
     global expenses_file
@@ -57,7 +58,7 @@ def add_expense():
     #setting the category
     try:
         category_input = int(input("Enter the number of the expense: "))
-        category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other", "Back"]
+        category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other"]
         category = (category_list[category_input - 1])
     except (ValueError, IndexError): #removing errors
         pass
@@ -66,10 +67,6 @@ def add_expense():
         add_expense()
 
     print(f"You selected {category}")
-
-    if category == "Back":
-        return_main()
-
     time.sleep(1)
     
     #setting the date
@@ -202,16 +199,16 @@ def total_expenses():
         print("-" * 20)
 
     #prints the category with the amount
-    print(f"Food: ${round(category["food"], 2)}")
-    print(f"Transportation: ${round(category["transportation"], 2)}")  
-    print(f"Entertainment: ${round(category["entertainment"], 2)}")
-    print(f"Bill: ${round(category["bill"], 2)}")
-    print(f"Housing: ${round(category["housing"], 2)}")
-    print(f"Other: ${round(category["other"], 2)}")  
+    print(f"Food: ${round(category['food'], 2)}")
+    print(f"Transportation: ${round(category['transportation'], 2)}")  
+    print(f"Entertainment: ${round(category['entertainment'], 2)}")
+    print(f"Bill: ${round(category['bill'], 2)}")
+    print(f"Housing: ${round(category['housing'], 2)}")
+    print(f"Other: ${round(category['other'], 2)}")  
     print("-" * 20)
 
     #print the total
-    print(f"Total: ${round(category["total"], 2)}\n")
+    print(f"Total: ${round(category['total'], 2)}\n")
     
     return_main()
 
@@ -259,7 +256,7 @@ def main():
     elif categories_input == "6":
         fun_budget()
     elif categories_input == "7":
-        SystemExit
+        sys.exit()
     else:
         print("\n\n\nInvalid choice. Please try again.\n")
         time.sleep(2)
