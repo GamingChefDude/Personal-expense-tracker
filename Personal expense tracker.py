@@ -20,15 +20,16 @@ def password():
     print("-" * 30,)
     print("This Program is password protected")
     real_password = "hellow"
-    password_input = input("Write the correct password: ")
-    if real_password == password_input:
-        print("Correct password! \nWelcome in")
-        time.sleep(1)
-        main()
-
-    else:
-        print("Wrong password \nTry Again")
-        password()
+    
+    while True:
+        password_input = input("Write the correct password: ")
+        if real_password == password_input:
+            print("Correct password! \nWelcome in")
+            time.sleep(1)
+            main()
+            break
+        else:
+            print("Wrong password \nTry Again")
 
 def check_budget():
         try:
@@ -51,20 +52,33 @@ def check_budget():
             print("Error in reading budget. Set it again.")
         return_main()
 
+def valid_amount():
+    while True:
+        try:
+            amount = float(input("Enter the amount of the expense: "))
+            if amount < 0:
+                print("Number cant be negetive")
+            else:
+                return amount
+        except ValueError as e:
+            print(f"\n\nInvalid input: {e}, please try again")
+            valid_amount()   
+
 def add_expense():
     print("\nWhat expense would you like to add?")
-    print("\n1. Food\n2. Transportation\n3. Entertainment\n4. Bill\n5. Housing\n6. Other\n7. Back: ")
+    print("\n1. Food\n2. Transportation\n3. Entertainment\n4. Bill\n5. Housing\n6. Other")
     
+    category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other"]
     #setting the category
-    try:
-        category_input = int(input("Enter the number of the expense: "))
-        category_list = ["Food", "Transportation", "Entertainment", "Bill", "Housing", "Other"]
-        category = (category_list[category_input - 1])
-    except (ValueError, IndexError): #removing errors
-        pass
-        print("invalid input")
-        time.sleep(1)
-        add_expense()
+    while True:
+        try:
+            category_input = int(input("Enter the number of the expense: "))
+            category = (category_list[category_input - 1])
+            break
+        except (ValueError, IndexError): #removing errors
+            pass
+            print("invalid input")
+            time.sleep(1)
 
     print(f"You selected {category}")
     time.sleep(1)
@@ -74,19 +88,8 @@ def add_expense():
     print(datex.strftime("Date: %d-%m-%Y"))
     date = datex.strftime("%d-%m-%Y")
 
-    #getting valid input for money
-    def valid_amount():
-        global amount
-        try:
-            amount = float(input("Enter the amount of the expense: "))
-            if amount < 0:
-                print("Number cant be negetive")
-                return amount
-        except ValueError as e:
-            print(f"\n\nInvalid input: {e}, please try again")
-            valid_amount()            
-
-    valid_amount()
+    #getting valid input for money     
+    amount = valid_amount()
 
     #getting everything in the storage file
     with open(expenses_file, mode='a', newline='') as file:
@@ -118,36 +121,27 @@ def view_expenses():
     return_main()
 
 def generate_report():
-    print("\nWhat type of graph?")
-    print("1. pie chart \n2. line graph")
-    graph = int(input("Input here: "))
-    if graph == 1:
-        try:
-            with open(expenses_file, mode='r') as file:
-                reader = csv.reader(file)
-                next(reader) 
-                categories = {}
-                for row in reader:
-                    try:
-                        if row[1] not in categories:
-                            categories[row[1]] = float(row[2])
-                        else:
-                            categories[row[1]] += float(row[2])
-                    except (ValueError, IndexError):
-                        pass
-            
-            plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%', startangle=90)
-            plt.legend(title="Expenses", loc = "best")
-            plt.title("Expenses by category")
-            plt.show()
-        except FileNotFoundError:
-            print("No expenses found. Add some first!\n")
-    elif graph == 2:
-        print("Feature not added, come back later")
-        time.sleep(1)
-    else:
-        print("Invalid input")
-
+    try:
+        with open(expenses_file, mode='r') as file:
+            reader = csv.reader(file)
+            next(reader) 
+            categories = {}
+            for row in reader:
+                try:
+                    if row[1] not in categories:
+                        categories[row[1]] = float(row[2])
+                    else:
+                        categories[row[1]] += float(row[2])
+                except (ValueError, IndexError):
+                    pass
+        
+        plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%', startangle=90)
+        plt.legend(title="Expenses", loc = "best")
+        plt.title("Expenses by category")
+        plt.show()
+    except FileNotFoundError:
+        print("No expenses found. Add some first!\n")
+    
 def monthly_expenses():
     try:
         month = input("What month do you want to see (mm-yyyy)?: ") 
@@ -164,7 +158,7 @@ def monthly_expenses():
                     print(f"{row[0]:<15}{row[1]:<15}${row[2]:<10}") #printing the expenses
             else:
                 print(f"No expense for {month}")
-    except FileExistsError:
+    except FileNotFoundError:
         print("Storage file does not exsist")
 
     return_main()
@@ -182,7 +176,7 @@ def total_expenses():
                 #adds the amount on the rows with the same category and rounds the number to (xx.xx)
                 if row[1] == "Food":
                     category["food"] += expense
-                elif row[1] == "Transpotation":
+                elif row[1] == "Transportation":
                     category["transportation"] += expense
                 elif row[1] == "Entertainment":
                     category["entertainment"] += expense
