@@ -3,7 +3,6 @@ import os
 import datetime
 import matplotlib.pyplot as plt
 import time
-import sys
 
 def database_csv():
     global expenses_file
