@@ -1,7 +1,6 @@
 import csv
 import os
 import datetime
-import matplotlib.pyplot as plt
 import time
 
 def database_csv():
@@ -117,28 +116,6 @@ def view_expenses():
     print("")
 
     return_main()
-
-def generate_report():
-    try:
-        with open(expenses_file, mode='r') as file:
-            reader = csv.reader(file)
-            next(reader) 
-            categories = {}
-            for row in reader:
-                try:
-                    if row[1] not in categories:
-                        categories[row[1]] = float(row[2])
-                    else:
-                        categories[row[1]] += float(row[2])
-                except (ValueError, IndexError):
-                    pass
-        
-        plt.pie(categories.values(), labels=categories.keys(), autopct='%1.1f%%', startangle=90)
-        plt.legend(title="Expenses", loc = "best")
-        plt.title("Expenses by category")
-        plt.show()
-    except FileNotFoundError:
-        print("No expenses found. Add some first!\n")
     
 def monthly_expenses():
     try:
@@ -232,7 +209,7 @@ def main():
     while True:
         print("\n\n---Personal Expense Tracker---")
         print("-" * 30,)
-        print("\n1. Add expense\n2. View expenses\n3. Generate report\n4. Monthly Expenses\n5. Total\n6. Set budget \n7. Exit\n")
+        print("\n1. Add expense\n2. View expenses\n3. Monthly Expenses\n4. Total\n5. Set budget \n6. Exit\n")
         categories_input = (input("input here: "))
         
         if categories_input == "1":
@@ -240,15 +217,12 @@ def main():
         elif categories_input == "2":
             view_expenses()
         elif categories_input == "3":
-            generate_report()
-            main()
-        elif categories_input == "4":
             monthly_expenses()
-        elif categories_input == "5":
+        elif categories_input == "4":
             total_expenses()
-        elif categories_input == "6":
+        elif categories_input == "5":
             fun_budget()
-        elif categories_input == "7":
+        elif categories_input == "6":
             print("Goodbye")
             break
         else:
