@@ -48,6 +48,8 @@ def check_budget():
             print("No budget has been set. Please set a budget first.")
         except ValueError:
             print("Error in reading budget. Set it again.")
+        except IndexError:
+            pass
         return_main()
 
 def valid_amount():
